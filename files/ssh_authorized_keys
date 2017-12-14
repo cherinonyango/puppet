@@ -6,3 +6,6 @@
 #
 # WARNING: This file is managed by Puppet. It is recommended to edit it in 
 # the Puppet source code and rerun 'puppet apply'
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlSyk2kaDdNlnkv1NXAF+97g9j40QrFcDYggpJW9qYCm/eguKIfxUXmxE+TLBEHJ2psmxWmyo7S6V8VPd4YwA4kX3qau6GUFXQyXb1fuPSAv9jqhRMoHBlDj+gCLiVx8DGjDid+5NqBOmjw8GxD+AO2QSDOnRVHpW8ts/jsYekcETpHuQEl3NiUg3i8cfeuh+WQfrTINyjvLjYzPTQLUUtkniA6xjuKi91wNYdN2rEsfeczvR6iTDa4hmM3CDRcojXH8D0zTaUPKqV3oq5oTWNdYXvW4Xbzw+yPyqzNIB7umbUONqzSxI/FI4/YLXpb7+MaCqDNMMd1Eo2dorClXXJ root@server
+

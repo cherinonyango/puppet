@@ -57,7 +57,7 @@ define dspace::owner ($username = $name,
         ensure  => directory,
         owner   => $username,
         group   => $gid,
-        mode    => 0750,
+        mode    => '0750',
         require => User[$username],
       }
 
@@ -73,7 +73,7 @@ define dspace::owner ($username = $name,
         ensure  => directory,
         owner   => $username,
         group   => $gid,
-        mode    => 0700,
+        mode    => '0700',
         require => File["/home/${username}"],
       }
 
@@ -84,7 +84,7 @@ define dspace::owner ($username = $name,
           ensure  => present,
           owner   => $username,
           group   => $gid,
-          mode    => 0600,
+          mode    => '0600',
           source  => $authorized_keys_source,
           require => File["/home/${username}/.ssh"],
         }
@@ -95,7 +95,7 @@ define dspace::owner ($username = $name,
         # Create a /etc/sudoers.d/ file for this account, so they can use 'sudo' without a password
         file { "Give ${username} full sudo access":
           path    => "/etc/sudoers.d/${username}",
-          mode    => 0440,			# Required mode of all files in /etc/sudoers.d/
+          mode    => '0440',			# Required mode of all files in /etc/sudoers.d/
           content => "${username} ALL=(ALL) NOPASSWD:ALL",
           require => User[$username],
         }

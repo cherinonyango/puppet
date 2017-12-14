@@ -64,7 +64,7 @@ define dspace::install ($owner             = $dspace::owner,
         ensure => "directory",
         owner  => $owner,
         group  => $group,
-        mode   => 0700,
+        mode   => '0700',
     }
 
 ->
@@ -77,7 +77,7 @@ define dspace::install ($owner             = $dspace::owner,
         ensure => directory,
         owner  => $owner,
         group  => $group,
-        mode   => 0700,
+        mode   => '0700',
     }
 
 ->
@@ -86,7 +86,9 @@ define dspace::install ($owner             = $dspace::owner,
     # return 1 = warning about adding the fingerprint is thrown, this is a good thing, we want this
     # return 0 = everything worked fine, the fingerprint is already configured
     exec { "Adding the fingerprint for GitHub so we can connect to it":
-        command   => "ssh -T -oStrictHostKeyChecking=no git@github.com",
+        command   => "ssh -T -StrictHostKeyChecking=no git@github.com",
+#        path      => ['/etc/ssh', '~/.ssh'],
+        path =>  [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ], 
         returns   => [0,1],
         user      => $owner,
         logoutput => true,
@@ -96,6 +98,7 @@ define dspace::install ($owner             = $dspace::owner,
 
     exec { "Cloning DSpace source code into ${src_dir}":
         command   => "git init && git remote add origin ${git_repo} && git fetch --all && git checkout -B master origin/master",
+        path      => "/home/dspace",
         creates   => "${src_dir}/.git",
         user      => $owner,
         cwd       => $src_dir, # run command from this directory
@@ -112,6 +115,7 @@ define dspace::install ($owner             = $dspace::owner,
     # Checkout the specified branch
     exec { "Checkout branch ${git_branch}" :
        command => "git checkout ${git_branch}",
+       path    => "/home/dspace",
        cwd     => $src_dir, # run command from this directory
        user    => $owner,
        # Only perform this checkout if the branch EXISTS and it is NOT currently checked out (if checked out it will have '*' next to it in the branch listing)
@@ -127,7 +131,7 @@ define dspace::install ($owner             = $dspace::owner,
      ensure  => file,
      owner   => $owner,
      group   => $group,
-     mode    => 0644,
+     mode    => '0644',
      content => template("dspace/custom.properties.erb"),
    }
 
@@ -141,7 +145,7 @@ define dspace::install ($owner             = $dspace::owner,
        ensure  => file,
        owner   => $owner,
        group   => $group,
-       mode    => 0644,
+       mode    => '0644',
        source  => $local_config_source,
        require => Exec["Checkout branch ${git_branch}"],
        before  => Exec["Build DSpace installer in ${src_dir}"],
@@ -153,7 +157,7 @@ define dspace::install ($owner             = $dspace::owner,
        ensure  => file,
        owner   => $owner,
        group   => $group,
-       mode    => 0644,
+       mode    => '0644',
        content => template("dspace/local.cfg.erb"),
        require => Exec["Checkout branch ${git_branch}"],
        before  => Exec["Build DSpace installer in ${src_dir}"],
@@ -167,6 +171,7 @@ define dspace::install ($owner             = $dspace::owner,
    exec { "Build DSpace installer in ${src_dir}":
      command   => "mvn package ${mvn_params}",
      cwd       => "${src_dir}", # Run command from this directory
+     path      => '/dspace-source/dspace-5.6-src-release/build.properties',
      user      => $owner,
      subscribe => File["${src_dir}/dspace/config/local.cfg"], # If local.cfg changes, rebuild
      refreshonly => true,  # Only run if local.cfg changes

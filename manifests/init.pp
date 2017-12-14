@@ -123,4 +123,16 @@ class dspace(
       unless  => "test \$(readlink default-java) = '${java_name}'",
       path    => "/usr/bin:/usr/sbin:/bin",
     }
+#######
+dspace::owner { 'dspace':
+  gid                    => $dspace::group,
+  sudoer                 => true,
+#  authorized_keys_source => true,
+ }
+#######
+dspace::install { '/dspace':
+    owner      => "dspace",
+    git_branch => "master",
+}
+#######
 }
